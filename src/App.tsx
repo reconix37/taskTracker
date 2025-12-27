@@ -3,8 +3,9 @@ import './App.css'
 import { Label } from './components/ui/label';
 import { Input } from './components/ui/input'
 import { Button } from './components/ui/button'
-import type { TaskList } from './types/Types';
+import type { Filter, TaskList } from './types/Types';
 import TasksListCard from './tasksComponents/TasksListCard';
+import TaskFilters from './tasksComponents/TaskFilters';
 
 function App() {
 
@@ -14,12 +15,17 @@ function App() {
   });
   const [newTaskTitle, setNewTaskTitle] = useState<string>("");
   const [error, setError] = useState<string>("");
+  const [filter, setFilter] = useState<Filter>("All");
+
+  const filteredTasks = tasks.filter(task => {
+    if (filter === 'active') return !task.completed;
+    if (filter === 'completed') return task.completed;
+    return true;
+  });
 
   useEffect(() => {
-      localStorage.setItem("tasks", JSON.stringify(tasks));
+    localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
-
-
 
   const handleAddTask = (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,13 +58,14 @@ function App() {
         <form onSubmit={handleAddTask} className='flex flex-col mt-4'>
           <div className='grid w-full items-center gap-2'>
             <Label htmlFor="task" className='font-bold'>New Task:</Label>
-            <Input type="text" value={newTaskTitle} onChange={(e) => setNewTaskTitle(e.target.value)} placeholder="Add Task" className='border' />
+            <Input type="text" value={newTaskTitle} onChange={(e) => { setNewTaskTitle(e.target.value); setError("") }} placeholder="Add Task" className='border' />
             {error && <p className='text-red-500 text-sm'>{error}</p>}
             <Button type="submit" className='w-full max-w-md mx-auto mt-3 rounded'>Add Task</Button>
           </div>
         </form>
       </div>
-      <TasksListCard tasks={tasks} toggleTaskCompletion={toggleTaskCompletion} deleteTask={deleteTask} />
+      <TaskFilters filter={filter} setFilter={setFilter} />
+      <TasksListCard tasks={filteredTasks} onToggleTaskCompletion={toggleTaskCompletion} onDeleteTask={deleteTask} />
     </>
   )
 }

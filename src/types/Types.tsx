@@ -4,4 +4,7 @@ export type Task = {
   title: string;
   completed: boolean;
 };
+
+export type Filter = 'All' | 'active' | 'completed';
+
 export type TaskList = Task[];
