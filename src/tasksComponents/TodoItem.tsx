@@ -38,7 +38,7 @@ export default function TodoItem({ task, toggleTaskCompletion, deleteTask, isEdi
                         value={newTitle}
                         onChange={(e) => {
                             setNewTitle(e.target.value);
-                            if (errorMessage) setErrorMessage(""); // Убираем ошибку, когда юзер начал писать
+                            if (errorMessage) setErrorMessage("");
                         }}
                         className={`w-full mr-2 ${errorMessage ? 'border-red-500' : ''}`}
                     />
