@@ -1,13 +1,18 @@
 import type { TaskList } from "../types/Types";
 import TodoItem from "./TodoItem";
 
+
 interface TasksListCardProps {
   tasks: TaskList;
   onToggleTaskCompletion: (taskId: string) => void;
   onDeleteTask: (taskId: string) => void;
+  onStartEditingTask: (taskId: string) => void;
+  onStopEditingTask: () => void;
+  onEditTask: (taskId: string, newTitle: string) => void;
+  editingTaskId: string | null;
 }
 
-export default function TasksListCard({tasks, onToggleTaskCompletion, onDeleteTask }: TasksListCardProps) {
+export default function TasksListCard({tasks, onToggleTaskCompletion, onDeleteTask, onStartEditingTask, onStopEditingTask, onEditTask, editingTaskId }: TasksListCardProps) {
 
   return (
     <div className='tasks-list w-full max-w-md mx-auto mt-6 p-4 bg-white rounded-lg shadow-md'>
@@ -15,7 +20,7 @@ export default function TasksListCard({tasks, onToggleTaskCompletion, onDeleteTa
         {tasks.length === 0 && <p className='text-gray-500'>No tasks added yet.</p>}
         <ul>
           {tasks.map((task) => (
-            <TodoItem key={task.id} task={task} toggleTaskCompletion={onToggleTaskCompletion} deleteTask={onDeleteTask} />
+            <TodoItem key={task.id} task={task} toggleTaskCompletion={onToggleTaskCompletion} deleteTask={onDeleteTask} isEditing={editingTaskId === task.id} onStartEditingTask={onStartEditingTask} onStopEditingTask={onStopEditingTask} onEditTask={onEditTask} />
           ))}
         </ul>
       </div>

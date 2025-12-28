@@ -16,6 +16,7 @@ function App() {
   const [newTaskTitle, setNewTaskTitle] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [filter, setFilter] = useState<Filter>("All");
+  const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
 
   const filteredTasks = tasks.filter(task => {
     if (filter === 'active') return !task.completed;
@@ -38,7 +39,7 @@ function App() {
       title: newTaskTitle,
       completed: false
     };
-    setTasks([...tasks, newTask]);
+    setTasks([newTask, ...tasks]);
     setNewTaskTitle("");
     setError("");
   }
@@ -49,6 +50,19 @@ function App() {
 
   const deleteTask = (taskId: string) => {
     setTasks(tasks.filter(task => task.id !== taskId));
+  }
+
+  const startEditingTask = (taskId: string) => {
+    setEditingTaskId(taskId);
+  }
+
+  const stopEditingTask = () => {
+    setEditingTaskId(null);
+  }
+
+  const editTask = (taskId: string, newTitle: string) => {
+    setTasks(tasks.map(task => task.id === taskId ? { ...task, title: newTitle } : task));
+    stopEditingTask();
   }
 
   return (
@@ -65,7 +79,7 @@ function App() {
         </form>
       </div>
       <TaskFilters filter={filter} setFilter={setFilter} />
-      <TasksListCard tasks={filteredTasks} onToggleTaskCompletion={toggleTaskCompletion} onDeleteTask={deleteTask} />
+      <TasksListCard tasks={filteredTasks} onToggleTaskCompletion={toggleTaskCompletion} onDeleteTask={deleteTask} onStartEditingTask={startEditingTask} onStopEditingTask={stopEditingTask} onEditTask={editTask} editingTaskId={editingTaskId} />
     </>
   )
 }
